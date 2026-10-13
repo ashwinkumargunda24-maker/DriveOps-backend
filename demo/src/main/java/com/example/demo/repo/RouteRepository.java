@@ -18,8 +18,8 @@ public interface RouteRepository extends JpaRepository<Route, Long> {
         (:branchId IS NULL OR r.branch.id = :branchId) AND
         (:organizationId IS NULL OR r.branch.organization.id = :organizationId) AND
         (:driverId IS NULL OR EXISTS (SELECT t.id FROM Trip t WHERE t.route = r AND t.driver.id = :driverId)) AND
-        (:q IS NULL OR LOWER(r.source) LIKE LOWER(CONCAT('%', :q, '%'))
-            OR LOWER(r.destination) LIKE LOWER(CONCAT('%', :q, '%')))
+        (:q IS NULL OR LOWER(r.source) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%')
+            OR LOWER(r.destination) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%'))
         """)
     Page<Route> search(@Param("branchId") Long branchId, @Param("organizationId") Long organizationId,
                        @Param("driverId") Long driverId, @Param("q") String q, Pageable pageable);

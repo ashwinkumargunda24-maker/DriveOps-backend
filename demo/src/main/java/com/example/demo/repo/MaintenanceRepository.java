@@ -20,7 +20,7 @@ public interface MaintenanceRepository extends JpaRepository<MaintenanceRecord, 
         (:organizationId IS NULL OR m.vehicle.branch.organization.id = :organizationId) AND
         (:vehicleId IS NULL OR m.vehicle.id = :vehicleId) AND
         (:status IS NULL OR m.status = :status) AND
-        (:q IS NULL OR LOWER(m.vehicle.registrationNumber) LIKE LOWER(CONCAT('%', :q, '%')))
+        (:q IS NULL OR LOWER(m.vehicle.registrationNumber) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%'))
         """)
     Page<MaintenanceRecord> search(@Param("branchId") Long branchId, @Param("organizationId") Long organizationId,
                                    @Param("vehicleId") Long vehicleId, @Param("status") MaintenanceStatus status,

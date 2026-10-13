@@ -25,8 +25,8 @@ public interface DriverRepository extends JpaRepository<Driver, Long> {
         (:organizationId IS NULL OR d.branch.organization.id = :organizationId) AND
         (:userId IS NULL OR d.userId = :userId) AND
         (:status IS NULL OR d.status = :status) AND
-        (:q IS NULL OR LOWER(d.name) LIKE LOWER(CONCAT('%', :q, '%'))
-            OR LOWER(d.licenseNumber) LIKE LOWER(CONCAT('%', :q, '%')))
+        (:q IS NULL OR LOWER(d.name) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%')
+            OR LOWER(d.licenseNumber) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%'))
         """)
     Page<Driver> search(@Param("branchId") Long branchId, @Param("organizationId") Long organizationId,
                         @Param("userId") Long userId, @Param("status") DriverStatus status,

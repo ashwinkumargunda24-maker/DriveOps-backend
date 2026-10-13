@@ -25,8 +25,8 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
         (:organizationId IS NULL OR v.branch.organization.id = :organizationId) AND
         (:assignedVehicleId IS NULL OR v.id = :assignedVehicleId) AND
         (:status IS NULL OR v.status = :status) AND
-        (:q IS NULL OR LOWER(v.registrationNumber) LIKE LOWER(CONCAT('%', :q, '%'))
-            OR LOWER(COALESCE(v.model, '')) LIKE LOWER(CONCAT('%', :q, '%')))
+        (:q IS NULL OR LOWER(v.registrationNumber) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%')
+            OR LOWER(COALESCE(v.model, '')) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%'))
         """)
     Page<Vehicle> search(@Param("branchId") Long branchId, @Param("organizationId") Long organizationId,
                          @Param("assignedVehicleId") Long assignedVehicleId, @Param("status") VehicleStatus status,

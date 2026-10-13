@@ -21,7 +21,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
         (:organizationId IS NULL OR e.branch.organization.id = :organizationId) AND
         (:status IS NULL OR e.status = :status) AND
         (:vehicleId IS NULL OR e.vehicle.id = :vehicleId) AND
-        (:q IS NULL OR LOWER(COALESCE(e.description, '')) LIKE LOWER(CONCAT('%', :q, '%')))
+        (:q IS NULL OR LOWER(COALESCE(e.description, '')) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%'))
         """)
     Page<Expense> search(@Param("branchId") Long branchId, @Param("organizationId") Long organizationId,
                          @Param("status") ExpenseStatus status, @Param("vehicleId") Long vehicleId,
@@ -34,7 +34,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
         (:organizationId IS NULL OR e.branch.organization.id = :organizationId) AND
         (:status IS NULL OR e.status = :status) AND
         (:vehicleId IS NULL OR e.vehicle.id = :vehicleId) AND
-        (:q IS NULL OR LOWER(COALESCE(e.description, '')) LIKE LOWER(CONCAT('%', :q, '%')))
+        (:q IS NULL OR LOWER(COALESCE(e.description, '')) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%'))
         """)
     Page<Expense> searchByDriver(@Param("driverId") Long driverId, @Param("branchId") Long branchId,
                                  @Param("organizationId") Long organizationId, @Param("status") ExpenseStatus status,

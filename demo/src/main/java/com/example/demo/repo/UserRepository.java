@@ -27,8 +27,8 @@ public interface UserRepository extends JpaRepository<AppUser, Long> {
         SELECT u FROM AppUser u WHERE
         (:organizationId IS NULL OR u.organization.id = :organizationId) AND
         (:branchId IS NULL OR u.branch.id = :branchId) AND
-        (:q IS NULL OR LOWER(u.username) LIKE LOWER(CONCAT('%', :q, '%'))
-            OR LOWER(u.email) LIKE LOWER(CONCAT('%', :q, '%')))
+        (:q IS NULL OR LOWER(u.username) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%')
+            OR LOWER(u.email) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%'))
         """)
     Page<AppUser> searchScoped(@Param("organizationId") Long organizationId, @Param("branchId") Long branchId,
                                @Param("q") String q, Pageable pageable);

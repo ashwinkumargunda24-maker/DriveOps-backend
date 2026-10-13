@@ -20,7 +20,7 @@ public interface IncidentRepository extends JpaRepository<Incident, Long> {
         (:organizationId IS NULL OR i.branch.organization.id = :organizationId) AND
         (:severity IS NULL OR i.severity = :severity) AND
         (:driverId IS NULL OR i.driver.id = :driverId) AND
-        (:q IS NULL OR LOWER(COALESCE(i.description, '')) LIKE LOWER(CONCAT('%', :q, '%')))
+        (:q IS NULL OR LOWER(COALESCE(i.description, '')) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%'))
         """)
     Page<Incident> search(@Param("branchId") Long branchId, @Param("organizationId") Long organizationId,
                           @Param("severity") IncidentSeverity severity, @Param("driverId") Long driverId,

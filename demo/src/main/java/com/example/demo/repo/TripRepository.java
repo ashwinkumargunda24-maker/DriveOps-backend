@@ -26,8 +26,8 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
         (:organizationId IS NULL OR t.branch.organization.id = :organizationId) AND
         (:status IS NULL OR t.status = :status) AND
         (:driverId IS NULL OR t.driver.id = :driverId) AND
-        (:q IS NULL OR CAST(t.id AS string) LIKE CONCAT('%', :q, '%')
-            OR LOWER(COALESCE(t.purpose, '')) LIKE LOWER(CONCAT('%', :q, '%')))
+        (:q IS NULL OR CAST(t.id AS string) LIKE CONCAT('%', CAST(:q AS string), '%')
+            OR LOWER(COALESCE(t.purpose, '')) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%'))
         """)
     Page<Trip> search(@Param("branchId") Long branchId, @Param("organizationId") Long organizationId,
                       @Param("status") TripStatus status, @Param("driverId") Long driverId,

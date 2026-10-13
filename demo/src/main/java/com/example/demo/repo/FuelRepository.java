@@ -19,7 +19,7 @@ public interface FuelRepository extends JpaRepository<FuelRecord, Long> {
         (:branchId IS NULL OR f.vehicle.branch.id = :branchId) AND
         (:organizationId IS NULL OR f.vehicle.branch.organization.id = :organizationId) AND
         (:driverId IS NULL OR f.driver.id = :driverId) AND
-        (:q IS NULL OR LOWER(f.vehicle.registrationNumber) LIKE LOWER(CONCAT('%', :q, '%')))
+        (:q IS NULL OR LOWER(f.vehicle.registrationNumber) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%'))
         """)
     Page<FuelRecord> search(@Param("branchId") Long branchId, @Param("organizationId") Long organizationId,
                             @Param("driverId") Long driverId, @Param("q") String q, Pageable pageable);
