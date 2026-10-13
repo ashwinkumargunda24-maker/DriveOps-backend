@@ -33,7 +33,7 @@ import com.example.demo.domain.Vehicle;
 import com.example.demo.repo.Repos;
 
 @Component
-@Profile("dev")
+@Profile("!test")
 public class DataSeeder implements CommandLineRunner {
     private final Repos repos;
     private final PasswordEncoder encoder;
