@@ -21,7 +21,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +54,7 @@ import com.example.demo.repo.VehicleRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@SpringBootTest
+@SpringBootTest(properties = "app.cors.allowed-origins=https://drive-ops-frontend.vercel.app")
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
@@ -147,6 +149,17 @@ class DemoApplicationTests {
         assertThrows(IllegalStateException.class, () -> new ProductionConfigurationValidator(
                 "a-long-random-production-secret-value", "jdbc:postgresql://db.example:5432/driveops", "app", "secret",
                 "http://localhost:3000", "/var/lib/driveops/uploads"));
+    }
+
+    @Test
+    void allowsCorsPreflightFromDeployedFrontend() throws Exception {
+        mockMvc.perform(options("/api/auth/me")
+                        .header("Origin", "https://drive-ops-frontend.vercel.app")
+                        .header("Access-Control-Request-Method", "GET")
+                        .header("Access-Control-Request-Headers", "authorization"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Access-Control-Allow-Origin", "https://drive-ops-frontend.vercel.app"))
+                .andExpect(header().string("Access-Control-Allow-Credentials", "true"));
     }
 
     @Test
