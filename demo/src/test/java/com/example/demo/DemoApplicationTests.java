@@ -8,6 +8,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -53,6 +55,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@ActiveProfiles("test")
 class DemoApplicationTests {
     private static final String PASSWORD = "Test-password-123";
 
@@ -135,11 +138,14 @@ class DemoApplicationTests {
 
     @Test
     void productionConfigurationRejectsWeakSecretsAndDevelopmentCors() {
-        assertThrows(IllegalStateException.class, () -> new ProductionConfigurationValidator(
-                "short", "jdbc:mysql://db.example:3306/driveops", "app", "secret",
+        assertDoesNotThrow(() -> new ProductionConfigurationValidator(
+                "a-long-random-production-secret-value", "jdbc:postgresql://db.example:5432/driveops", "app", "secret",
                 "https://app.example.com", "/var/lib/driveops/uploads"));
         assertThrows(IllegalStateException.class, () -> new ProductionConfigurationValidator(
-                "a-long-random-production-secret-value", "jdbc:mysql://db.example:3306/driveops", "app", "secret",
+                "short", "jdbc:postgresql://db.example:5432/driveops", "app", "secret",
+                "https://app.example.com", "/var/lib/driveops/uploads"));
+        assertThrows(IllegalStateException.class, () -> new ProductionConfigurationValidator(
+                "a-long-random-production-secret-value", "jdbc:postgresql://db.example:5432/driveops", "app", "secret",
                 "http://localhost:3000", "/var/lib/driveops/uploads"));
     }
 

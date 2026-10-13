@@ -21,8 +21,8 @@ public class ProductionConfigurationValidator {
         if (jwtSecret.trim().getBytes(java.nio.charset.StandardCharsets.UTF_8).length < 32) {
             throw new IllegalStateException("Production JWT_SECRET must contain at least 32 bytes.");
         }
-        if (!datasourceUrl.startsWith("jdbc:mysql://") || datasourceUsername.isBlank() || datasourcePassword.isBlank()) {
-            throw new IllegalStateException("Production MySQL URL, username, and password are required.");
+        if (!datasourceUrl.startsWith("jdbc:postgresql://") || datasourceUsername.isBlank() || datasourcePassword.isBlank()) {
+            throw new IllegalStateException("Production PostgreSQL URL, username, and password are required.");
         }
         if (uploadDir.isBlank()) {
             throw new IllegalStateException("Production UPLOAD_DIR must be configured.");

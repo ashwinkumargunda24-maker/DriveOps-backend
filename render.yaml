@@ -1,0 +1,43 @@
+databases:
+  - name: driveops-db
+    databaseName: driveops
+    user: driveops
+    plan: free
+
+services:
+  - type: web
+    name: driveops-backend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./demo/Dockerfile
+    dockerContext: ./demo
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DB_HOST
+        fromDatabase:
+          name: driveops-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: driveops-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: driveops-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: driveops-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: driveops-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://drive-ops-frontend.vercel.app
+      - key: UPLOAD_DIR
+        value: /tmp/driveops-uploads
